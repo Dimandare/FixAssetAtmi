@@ -22,36 +22,39 @@
             <div class="card card-solid">
                 <div class="card-body">
                     <div class="row">
+                        <!-- Left Column with Item Details -->
                         <div class="col-12 col-sm-6">
-                            <h3 class="d-inline-block"> <b>Fix Asset {{ ucfirst($fa->nama_barang) }} </b></h3>
+                            <h3 class="d-inline-block">
+                                <b>Fix Asset {{ ucfirst($fa->nama_barang) }}</b>
+                            </h3>
                             <div class="col-12">
+                                <!-- Asset Image -->
                                 <img src="{{ $fa->foto_barang ? asset('uploads/photos/' . basename($fa->foto_barang)) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
-                                
                                 <p class="float-right">Dibuat Oleh: <b>{{ ucfirst($fa->user->username) }}</b></p>
                             </div>
                         </div>
+        
+                        <!-- Right Column with Asset Information -->
                         <div class="col-12 col-sm-6">
-                            {{-- <a href="{{ route('manageaset.edit', $fa->id_fa) }}"
-                                class="btn btn-xs btn-default float-right text-info" id="btn-create-aset">
-                                <i class="fas fa-pen-square"></i> Aset
-                            </a> --}}
-                            <h4 class="my-3">Kode : <span class="badge bg-info">{{ $fa->kode_fa }} </span></h4>
+                            <h4 class="my-3">Kode: <span class="badge bg-info">{{ $fa->kode_fa }}</span></h4>
                             <hr>
                             <h5>Kategori Barang</h5>
                             <dl class="row">
                                 <dt class="col-sm-4">Lokasi</dt>
                                 <dd class="col-sm-8">{{ $fa->lokasi->kode_lokasi . ' - ' . $fa->lokasi->nama_lokasi_yayasan }}</dd>
+                                
                                 <dt class="col-sm-4">Institusi</dt>
-                                <dd class="col-sm-8">
-                                    {{ $fa->institusi->kode_institusi . ' - ' . $fa->institusi->nama_institusi }}</dd>
+                                <dd class="col-sm-8">{{ $fa->institusi->kode_institusi . ' - ' . $fa->institusi->nama_institusi }}</dd>
+                                
                                 <dt class="col-sm-4">Kelompok</dt>
-                                <dd class="col-sm-8">
-                                        {{ $fa->kelompok->kode_kelompok . ' - ' . $fa->kelompok->nama_kelompok_yayasan }}
-                                </dd>
+                                <dd class="col-sm-8">{{ $fa->kelompok->kode_kelompok . ' - ' . $fa->kelompok->nama_kelompok_yayasan }}</dd>
+                                
                                 <dt class="col-sm-4">Jenis</dt>
                                 <dd class="col-sm-8">{{ $fa->jenis->kode_jenis . ' - ' . $fa->jenis->nama_jenis_yayasan }}</dd>
+                                
                                 <dt class="col-sm-4">Ruang</dt>
                                 <dd class="col-sm-8">{{ $fa->ruang->kode_ruang . ' - ' . $fa->ruang->nama_ruang_yayasan }}</dd>
+                                
                                 <dt class="col-sm-4">Tipe</dt>
                                 <dd class="col-sm-8">{{ $fa->tipe->kode_tipe . ' - ' . $fa->tipe->nama_tipe_yayasan }}</dd>
                                 
@@ -62,79 +65,81 @@
                             </dl>
                         </div>
                     </div>
-                    
-                    <!-- QR Code in Bottom-Right Corner -->
-                    <div class="row mt-4">
-                        <div class="col-12 text-center">
-                            <div class="qr-code-container">
-                                <center>
-                                <img src="data:image/png;base64,{{ $barcode }}" alt="QR Code" id="qrcode">
-                                </center>
-                                <div class="button-group">
-                                    <a href="data:image/png;base64,{{ $barcode }}" download="barcode.png">
-                                            <button type="submit" class="btn btn-primary">Download QR Code</button>
-                                        
-                                        
-                                                                            </a>
-                                                                            <a href="{{ route('aset.detailbarcode', ['kode_fa' => $fa->kode_fa]) }}" class="btn btn-info">AfterScan</a>
-                                                                            <button class="btn btn-secondary" onclick="printQRCode()">Print QR Code</button>
+        
+                    <!-- QR Code Section -->
+                    <form action="{{ route('generate.qrcode', ['kode_fa' => $fa->kode_fa]) }}" method="get">
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <div class="qr-code-container">
+                                    <input type="hidden" name="kode_fa" value="{{ $fa->kode_fa }}">
+
+                                    <center>
+                                        <img src="data:image/png;base64,{{ $barcode }}" alt="QR Code" id="qrcode">
+                                    </center>
+                                    <div class="button-group">
+                                        <div class="form-group">
+                                            <label for="unit">Print Salah Satu Unit:</label>
+                                            <select class="form-control" id="unit" name="unit">
+                                                @for ($i = 1; $i <= $fa->jumlah_unit; $i++)
+                                                    <option value="{{ $i }}">Unit {{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <button type="submit" name="action" value="single" class="btn btn-primary">
+                                            <i class="fa fa-print"></i> Print Unit
+                                        </button>
+                                        <button type="submit" name="action" value="all" class="btn btn-primary">
+                                            <i class="fa fa-print"></i> Print All
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                     
+        
+                    <!-- Tabs for Description and History -->
                     <div class="row mt-4">
                         <nav class="w-100">
                             <div class="nav nav-tabs" id="product-tab" role="tablist">
-                                <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab"
-                                    href="#product-desc" role="tab" aria-controls="product-desc"
-                                    aria-selected="true">Description</a>
-                                <a class="nav-item nav-link" id="product-history-tab" data-toggle="tab"
-                                    href="#product-history" role="tab" aria-controls="product-history"
-                                    aria-selected="false">History Ajuan</a>
-                              
+                                <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab" href="#product-desc" role="tab" aria-controls="product-desc" aria-selected="true">Description</a>
+                                <a class="nav-item nav-link" id="product-history-tab" data-toggle="tab" href="#product-history" role="tab" aria-controls="product-history" aria-selected="false">History Ajuan</a>
                             </div>
                         </nav>
                         <div class="tab-content p-3" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="product-desc" role="tabpanel"
-                                aria-labelledby="product-desc-tab">
-                                <p class="lead">Deskripsi :</p>
+                            <!-- Description Tab -->
+                            <div class="tab-pane fade show active" id="product-desc" role="tabpanel" aria-labelledby="product-desc-tab">
+                                <p class="lead">Deskripsi:</p>
                                 <p>{!! $fa->des_barang !!}</p>
                             </div>
-                            <div class="tab-pane fade" id="product-history" role="tabpanel"
-                                aria-labelledby="product-history-tab">
+                            
+                            <!-- History Tab -->
+                            <div class="tab-pane fade" id="product-history" role="tabpanel" aria-labelledby="product-history-tab">
                                 <dl class="row">
+                                    <dt class="col-sm-4">STATUS:</dt>
+                                    <dd class="col-sm-8">{{ $fa->status_transaksi }}</dd>
                                     
-                                    <dt class="col-sm-4">STATUS :</dt>
-                                    <dd class="col-sm-8">: {{ $fa->status_transaksi}}</dd>
-                                    <br>
-                                    @if($fa->no_permintaan != null)
-                                    <dt class="col-sm-4">Pengajuan ID</dt>
-                                    <dd class="col-sm-4">: {{ $fa->no_permintaan }}</dd>
+                                    @if($fa->no_permintaan)
+                                        <dt class="col-sm-4">Pengajuan ID</dt>
+                                        <dd class="col-sm-4">{{ $fa->no_permintaan }}</dd>
                                     @endif
-                                    <br>
+                                    
                                     <dt class="col-sm-4">Jumlah Unit</dt>
-                                    <dd class="col-sm-4">: {{ $fa->jumlah_unit }}</dd>
-                                    <br>
-                                    @if($fa->unit_asal != null)
-                                    <dt class="col-sm-4">Unit Asal Aset</dt>
-                                    <dd class="col-sm-8">: {{ ucfirst($fa->unit_asal) }}</dd>
-                                   
-                              
-                                    @endif
-                                   
+                                    <dd class="col-sm-4">{{ $fa->jumlah_unit }}</dd>
                                     
-                                
+                                    @if($fa->unit_asal)
+                                        <dt class="col-sm-4">Unit Asal Aset</dt>
+                                        <dd class="col-sm-8">{{ ucfirst($fa->unit_asal) }}</dd>
+                                    @endif
                                 </dl>
                             </div>
-                            
                         </div>
                     </div>
-                    
                 </div>
                 <!-- /.card-body -->
             </div>
         </section>
+        
     </div>
 @endsection
 @section('scripttambahan')
@@ -259,16 +264,7 @@
             bsCustomFileInput.init();
         });
 
-        function printQRCode() {
-            var qrCodeImg = document.getElementById('qrcode');
-            var printWindow = window.open('', '', 'height=400,width=600');
-            printWindow.document.write('<html><head><title>Print QR Code</title></head><body>');
-            printWindow.document.write('<img src="' + qrCodeImg.src + '" style="width: 100%;">');
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.focus();
-            printWindow.print();
-        }
+       
     </script>
   
 @endsection

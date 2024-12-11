@@ -106,13 +106,16 @@ class ManageAsetController extends Controller
         return view("manageaset::detail", compact('fa', 'tipe', 'lokasi', 'institusi'), ['menu' => $this->menu,'barcode' => $base64QrCode, 'code' => $code]);
     }
 
-public function detailbarcode($kode_fa)
+public function detailbarcode($kode_fa, $kode_baru = null)
     {
+        if($kode_baru == null){
         $fa = FixedAsset::where('kode_fa', $kode_fa)->first();
         $institusi = Institusi::all();
         $tipe = Tipe::all();
         $lokasi = Lokasi::all();
         $code = $kode_fa;
+        
+
       // Define the base URL for your asset detail page
 // Define the URL or text to encode in the QR code
 $baseUrl = url('/aset/manageaset/detail/'. $kode_fa );
@@ -135,6 +138,39 @@ $qrCodeImage = $writer->write($qrCode)->getString();
 $base64QrCode = base64_encode($qrCodeImage);
 
         return view("manageaset::barcodepage", compact('fa', 'tipe', 'lokasi', 'institusi'), ['menu' => $this->menu,'barcode' => $base64QrCode, 'code' => $code]);
+        }else{
+            $fa = FixedAsset::where('kode_fa', $kode_fa)->first();
+            $institusi = Institusi::all();
+            $tipe = Tipe::all();
+            $lokasi = Lokasi::all();
+            $code = $kode_fa;
+            $kodebaru = $kode_baru;
+            $lastThreeDigits = substr($kodebaru, -3); // Extract the last 3 characters
+            $lastThreeDigits = ltrim($lastThreeDigits, '0');    
+          // Define the base URL for your asset detail page
+    // Define the URL or text to encode in the QR code
+    $baseUrl = url('/aset/manageaset/detail/'. $kode_fa );
+    $fullUrl = $baseUrl;
+    
+    // Create a new QR code instance
+    $qrCode = new QrCode($fullUrl);
+    
+    // Set the size of the QR code (in pixels)
+    $qrCode->setSize(200); // 200x200 pixels
+    
+    // Set the margin around the QR code
+    $qrCode->setMargin(10); // 10 pixels margin
+    
+    // Generate the QR code
+    $writer = new PngWriter();
+    $qrCodeImage = $writer->write($qrCode)->getString();
+    
+    // Encode QR code image in Base64 for embedding in HTML
+    $base64QrCode = base64_encode($qrCodeImage);
+    
+            return view("manageaset::barcodepage", compact('fa', 'tipe', 'lokasi', 'institusi'), ['menu' => $this->menu,'barcode' => $base64QrCode, 'code' => $code, 'kodebaru' => $kodebaru, 'unitke' => $lastThreeDigits]);
+
+        }
     }
     /**
      * Show the form for creating a new resource.
@@ -324,7 +360,7 @@ $base64QrCode = base64_encode($qrCodeImage);
 
                     $idFa = Str::random(32);
                   
-                    $jumlah =  str_pad($row[12] + 1, 3, '0', STR_PAD_LEFT);
+                    $jumlah =  str_pad($row[12], 3, '0', STR_PAD_LEFT);
                     $no_urut = str_pad(1, 3, "0", STR_PAD_LEFT);
                     if ($jumlah == $no_urut){
                         $kode_fa = $id_lokasi->kode_lokasi . "." . $id_institusi->kode_institusi . "." . $id_kelompok->kode_kelompok . "." . $id_jenis->kode_jenis . "." . $id_ruang->kode_ruang . "." . $id_tipe->kode_tipe . "-" . $no_urut;

@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class FixedAsset extends Model
 {
     use HasFactory;
-
+   
+     protected $table = 'fixed_assets'; // Sesuaikan dengan nama tabel di database Anda
+    
     protected $primaryKey = 'id_fa';
     public $incrementing = false;
     protected $fillable = [

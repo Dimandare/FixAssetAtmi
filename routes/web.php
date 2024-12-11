@@ -21,6 +21,7 @@ use Modules\ManageUser\Http\Controllers\ManageUserController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\QRCodeController;
 
 
 use App\Http\Controllers\EmailController;
@@ -41,6 +42,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/admin', function () {
     return view('admin');
 });
+Route::get('generate-qrcode/{kode_fa}', [QRCodeController::class, 'generateQRCode'])->name('generate.qrcode');
 
 
 Route::prefix('/oauth')->group(function () {
@@ -56,8 +58,9 @@ Route::get('password/reset/{token}', function ($token) {
 // Route to handle the password reset form submission
 Route::post('password/reset', [ManageUserController::class, 'reset'])->name('password.update');
 
-Route::get('/aset/manageaset/detailbarcode/{kode_fa}', [ManageAsetController::class, 'detailbarcode'])
-->name('aset.detailbarcode');
+Route::get('/aset/manageaset/detailbarcode/{kode_fa}/{kode_baru?}', [ManageAsetController::class, 'detailbarcode'])
+    ->name('aset.detailbarcode');
+
 
 Route::redirect('/', '/auth/login'); //link utama langsung mengarahkan ke login
 Route::prefix('auth')->middleware('guest')->group(function () {
