@@ -36,7 +36,12 @@
         
                         <!-- Right Column with Asset Information -->
                         <div class="col-12 col-sm-6">
-                            <h4 class="my-3">Kode: <span class="badge bg-info">{{ $fa->kode_fa }}</span></h4>
+                            <h4 class="my-3 d-flex align-items-center justify-content-between">
+                                <b>KODE: <span class="badge bg-info fs-6">{{ $fa->kode_fa }}</span></b>
+                                <a href="" class="btn btn-sm btn-outline-primary ms-3">
+                                    Edit <i class="fas fa-edit"></i>
+                                </a>
+                            </h4>
                             <hr>
                             <h5>Kategori Barang</h5>
                             <dl class="row">
@@ -64,6 +69,7 @@
                                 @endif
                             </dl>
                         </div>
+                        
                     </div>
         
                     <!-- QR Code Section -->

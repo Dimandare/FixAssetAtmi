@@ -17,7 +17,7 @@
                                 <p style="font-size: 0.85rem; margin: 0;"><b>Unit ke&nbsp;{{ $asset['unitke'] }}</b></p>
 
                                 <p style="font-size: 0.75rem; margin: 0; text-align: left;">
-                                    <b>Kode FA :</b> <span style="font-weight: bold; color: white; background-color: grey; padding: 2px 8px; border-radius: 5px;">{{ $asset['kodebaru'] }}</span><br>
+                                    <b>Kode FA :</b> <span  class="badge bg-info fs-7" style="font-weight: bold;  padding: 2px 8px; border-radius: 5px;">{{ $asset['kodebaru'] }}</span><br>
                                     <b>Lokasi :</b> <span>{{ $fa->lokasi->nama_lokasi_yayasan }}</span><br>
                                     <b>Unit :</b> <span>{{ $fa->Institusi->nama_institusi }}</span><br>
                                     <b>Kelompok :</b> <span>{{ $fa->Kelompok->nama_kelompok_yayasan }}</span><br>
@@ -76,7 +76,7 @@
         .qr-code {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: center;  
             width: 1.8in;
             height: 100%; /* Ensure it fills the height of the card */
             margin-right: 12px;
