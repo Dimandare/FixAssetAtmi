@@ -29,7 +29,7 @@
                             </h3>
                             <div class="col-12">
                                 <!-- Asset Image -->
-                                <img src="{{ $fa->foto_barang ? asset('uploads/photos/' . basename($fa->foto_barang)) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
+                                <img src="{{ $fa->foto_barang ? asset('fotofixaset/' . basename($fa->foto_barang)) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
                                 <p class="float-right">Dibuat Oleh: <b>{{ ucfirst($fa->user->username) }}</b></p>
                             </div>
                         </div>

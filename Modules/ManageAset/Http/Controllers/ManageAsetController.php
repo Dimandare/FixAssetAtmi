@@ -243,14 +243,15 @@ $base64QrCode = base64_encode($qrCodeImage);
             ]);
         
             // Proses upload foto barang
-            $fotoPath = null;
-            if ($request->hasFile('foto_barang')) {
-                // Generate a unique file name
-                $fileName = time() . '_' . $request->file('foto_barang')->getClientOriginalName();
-                // Move the uploaded file to the desired location
-                $fotoPath = $request->file('foto_barang')->move(public_path('uploads/photos'), $fileName);
-            }
-            
+       $fotoPath = null;
+    if ($request->hasFile('foto_barang')) {
+        // Generate a unique file name
+        $fileName = time() . '_' . $request->file('foto_barang')->getClientOriginalName();
+        // Move the uploaded file to the desired location in `public/uploads/photos/`
+        $request->file('foto_barang')->move(public_path('fotofixaset'), $fileName);
+        // Save the public URL for the file
+        $fotoPath = url('fotofixaset' . $fileName);
+    }
 
             // Mengambil data terkait untuk membentuk kode aset
             $kode_institusi = Institusi::find($request->instansi)->kode_institusi;
