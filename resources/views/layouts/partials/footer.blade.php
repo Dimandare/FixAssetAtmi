@@ -29,7 +29,7 @@
      </div>
      <!-- Default to the left -->
      <strong>YKBS &copy; {{ date('Y') }} <a href="https://atmicorp.com">ATMI YKBS</a>.</strong>
-    Dan All rights reserved.
+    Daniel Dimas All rights reserved.
  </footer>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  <!-- Load Select2 -->
