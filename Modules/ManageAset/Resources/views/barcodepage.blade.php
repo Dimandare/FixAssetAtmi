@@ -33,7 +33,7 @@
         }
         .asset-image {
             width: 100%;
-            height: 200px;
+            height: 350px;
             background-size: cover;
         }
         .asset-details {
@@ -80,7 +80,7 @@
         </div>
         <br>
         <!-- Image Section -->
-        <div class="asset-image" style="background: url('{{ asset('boxs.png') }}') no-repeat center center; background-size: cover;"></div>
+        <div class="asset-image" style="background: url('{{ $fa->foto_barang ? asset('fotofixaset/' . basename($fa->foto_barang)) : asset('boxs.png') }}') no-repeat center center; background-size: cover;"></div>
 
         <!-- Asset Details Section -->
         <div class="asset-details">

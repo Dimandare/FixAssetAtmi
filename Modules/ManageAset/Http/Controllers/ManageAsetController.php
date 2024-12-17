@@ -325,6 +325,8 @@ $base64QrCode = base64_encode($qrCodeImage);
         return null; // Validasi berhasil
     }
 
+
+
     public function upload(Request $request)
 {
     try {
@@ -476,59 +478,67 @@ $base64QrCode = base64_encode($qrCodeImage);
      * @return Renderable
      */
     public function update(Request $request, $id_fa)
-    {
-        $fa = FixedAsset::findOrFail($id_fa);
+{
+    $fa = FixedAsset::findOrFail($id_fa);
 
-        //define validation rules
-        $request->validate([
-            "id_institusi" => 'required',
-            "id_divisi" => 'required',
-            "id_tipe" => 'required',
-            "id_kelompok" => 'required',
-            "id_jenis" => 'required',
-            "id_lokasi" => 'required',
-            "id_ruang" => 'required',
-            "nama_barang" => 'required',
-            "tahun_diterima" => 'required',
-            "des_barang" => 'required',
-            "status_transaksi" => 'required',
-            "status_barang" => 'required',
-            "foto_barang" => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+    // Define validation rules
+    $request->validate([
+        "institusi" => 'required',
+        "id_tipe" => 'required',
+        "id_kelompok" => 'required',
+        "id_jenis" => 'required',
+        "id_lokasi" => 'required',
+        "id_ruang" => 'required',
+        "nama_barang" => 'required',
+        "tahun_diterima" => 'required',
+        "des_barang" => 'required',
+        "status_transaksi" => 'required',
+        "status_barang" => 'required',
+        "foto_barang" => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        "jumlah_unit" => 'required|numeric|min:1', // Add validation for jumlah_unit
+    ]);
 
-        if ($request->hasFile('foto_barang')) {
-            // Hapus foto lama jika ada
-            if ($fa->foto_barang) {
-                Storage::disk('public')->delete('foto_barang/' . $fa->foto_barang);
-            }
-
-            $file = $request->file('foto_barang');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('foto_barang', $fileName, 'public');
-        } else {
-            $fileName = $fa->foto_barang;
+    // Handle photo upload
+    if ($request->hasFile('foto_barang')) {
+        // Delete the old photo if it exists
+        if ($fa->foto_barang) {
+            Storage::disk('public')->delete('fotofixaset/' . $fa->foto_barang);
         }
 
-        $fa->update([
-            "id_institusi" => $request->id_institusi,
-            "id_divisi" => $request->id_divisi,
-            "id_tipe" => $request->id_tipe,
-            "id_kelompok" => $request->id_kelompok,
-            "id_jenis" => $request->id_jenis,
-            "id_lokasi" => $request->id_lokasi,
-            "id_ruang" => $request->id_ruang,
-            "nama_barang" => $request->nama_barang,
-            "foto_barang" => $fileName,
-            "tahun_diterima" => $request->tahun_diterima,
-            "des_barang" => $request->des_barang,
-            "no_permintaan" => $request->no_permintaan,
-            "status_transaksi" => $request->status_transaksi,
-            "status_barang" => $request->status_barang,
-        ]);
+        // Get the uploaded file
+        $file = $request->file('foto_barang');
 
-        //return route manageaset.detail 
-        return redirect()->route("manageaset.detail", ['kode_fa' => $fa->kode_fa])->with(['success' => 'Data Berhasil Disimpan. Terima kasih']);
+        // Use the asset's name as the file name (sanitize it if needed)
+        $fileName = $fa->nama_barang . '.' . $file->getClientOriginalExtension();
+
+        // Move the file to the 'public/fotofixaset' folder
+        $file->move(public_path('fotofixaset'), $fileName);
+
+        // Save the new file name in the database
+        $fa->foto_barang = $fileName;
+    } else {
+        $fileName = $fa->foto_barang;
     }
+
+    // Update the asset with the new data
+    $fa->update([
+        "id_institusi" => $request->institusi,
+        "id_tipe" => $request->id_tipe,
+        "id_kelompok" => $request->id_kelompok,
+        "id_jenis" => $request->id_jenis,
+        "id_lokasi" => $request->id_lokasi,
+        "id_ruang" => $request->id_ruang,
+        "nama_barang" => $request->nama_barang,
+        "foto_barang" => $fileName,
+        "tahun_diterima" => $request->tahun_diterima,
+        "des_barang" => $request->des_barang,
+        "jumlah_unit" => $request->jumlah_unit, // Save jumlah_unit to the database
+    ]);
+
+    // Redirect with success message
+    return redirect()->route("manageaset.detail", ['kode_fa' => $fa->kode_fa])->with(['success' => 'Data Berhasil Disimpan. Terima kasih']);
+}
+
 
     /**
      * Remove the specified resource from storage.

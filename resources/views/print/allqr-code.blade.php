@@ -68,7 +68,7 @@
             flex-direction: row;
             margin: 0 auto;
             box-shadow: none;
-            width: 7.8in;
+            width: 5.8in;
             height: 1.6in;
             page-break-inside: avoid;
         }
@@ -77,7 +77,7 @@
             display: flex;
             justify-content: center;
             align-items: center;  
-            width: 1.8in;
+            width: 2.8in;
             height: 100%; /* Ensure it fills the height of the card */
             margin-right: 12px;
         }

@@ -83,6 +83,8 @@ Route::prefix('main')->middleware("auth")->group(function () {
     Route::resource('manage-jenis', ManageJenisController::class);
     Route::resource('manage-ruang', ManageRuangController::class);
     Route::resource('manage-institusi', ManageInstitusiController::class);
+    Route::get('/manage-fixaset/{id_fa}/edit', [ManageAsetController::class, 'edit'])
+    ->name('manage-fixaset.edit');
 
     Route::get('managepermintaannfa/approve', [ManagePermintaanNFAController::class, 'approve'])->name('managepermintaannfa.approve');
 
